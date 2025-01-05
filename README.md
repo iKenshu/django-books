@@ -58,6 +58,14 @@ Después de tener docker compose inicializado y puedes empezar a hacer los sigui
 
 La API estará disponible en [http://localhost:8000/api/](http://localhost:8000/api/).
 
+3. **Para correr tests**
+
+    Hay unos tests sencillos sobre algunos endpoints que se pueden ejecutar con el siguiente comando:
+
+    ```bash
+    docker-compose exec web python manage.py test
+    ```
+
 ## Documentación de la API
 
 - Swagger: [http://localhost:8000/swagger/](http://localhost:8000/swagger/)
