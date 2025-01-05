@@ -63,7 +63,6 @@ class BookTestCase(TestCase):
         Test to verify that the average price of books is returned.
         """
         response = self.client.get("/api/books/average-price/?year=2021")
-        print(response.json())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, {"average_price": 20.0, "year": 2021})
 
