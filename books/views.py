@@ -37,12 +37,16 @@ class BookViewSet(viewsets.ViewSet):
         if serializer.is_valid():
             booksCollection.insert_one(serializer.validated_data)
             return Response("Book created successfully.")
+        return Response(serializer.errors, status=400)
 
     def retrieve(self, request, pk=None):
         """
         Get a book by id.
         """
+        pk = ObjectId(pk)
         book = booksCollection.find_one({"_id": pk})
+        if not book:
+            return Response("Book not found.", status=404)
         serializer = BookSerializer(book)
         return Response(serializer.data)
 
@@ -52,6 +56,9 @@ class BookViewSet(viewsets.ViewSet):
         """
         updated_book = request.data
         pk = ObjectId(pk)
+        book = booksCollection.find_one({"_id": pk})
+        if not book:
+            return Response("Book not found.", status=404)
         booksCollection.update_one({"_id": pk}, {"$set": updated_book})
 
         return Response("Book updated successfully.")
@@ -61,6 +68,10 @@ class BookViewSet(viewsets.ViewSet):
         Delete a book by id.
         """
         pk = ObjectId(pk)
+        book = booksCollection.find_one({"_id": pk})
+        if not book:
+            return Response("Book not found.", status=404)
+
         booksCollection.delete_one({"_id": pk})
         return Response("Book deleted successfully.")
 
@@ -88,7 +99,6 @@ class BookViewSet(viewsets.ViewSet):
         ]
 
         result = list(booksCollection.aggregate(pipeline))
-        print(result)
         if result:
             return Response({"year": year, "average_price": result[0]["average_price"]})
         return Response({"year": year, "average_price": 0})

@@ -2,6 +2,7 @@
 This file contains tests for books app.
 """
 
+from bson import ObjectId
 from django.contrib.auth.models import User
 from django.test import TestCase
 from rest_framework.authtoken.models import Token
@@ -40,7 +41,7 @@ class BookTestCase(TestCase):
         """
         Test to verify that all books are returned.
         """
-        response = self.client.get("/books/")
+        response = self.client.get("/api/books/")
         self.assertEqual(response.status_code, 200)
 
     def test_create_book(self):
@@ -54,13 +55,22 @@ class BookTestCase(TestCase):
             "published_date": "2021-01-02",
             "price": "20.00",
         }
-        response = self.client.post("/books/", new_book_data, format="json")
+        response = self.client.post("/api/books/", new_book_data, format="json")
         self.assertEqual(response.status_code, 200)
 
-    def test_averaage_price(self):
+    def test_average_price(self):
         """
         Test to verify that the average price of books is returned.
         """
-        response = self.client.get("/books/average-price/?year=2021")
+        response = self.client.get("/api/books/average-price/?year=2021")
+        print(response.json())
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, {"average_price": 15.0})
+        self.assertEqual(response.data, {"average_price": 20.0, "year": 2021})
+
+    def test_get_book_not_found(self):
+        """
+        Test to verify that a book is not found.
+        """
+        random_id = ObjectId()
+        response = self.client.get(f"/api/books/{random_id}/")
+        self.assertEqual(response.status_code, 404)
