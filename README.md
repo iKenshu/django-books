@@ -22,8 +22,8 @@ Este proyecto es una prueba técnica para Seek y es una API para gestionar libro
 Clona este repositorio:
 
 ```bash
-git clone <repositorio-url>
-cd <directorio-del-proyecto>
+git clone https://github.com/iKenshu/django-books.git
+cd django-books
 ```
 
 Construye e inicia los contenedores:
