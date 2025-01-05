@@ -7,11 +7,11 @@ from datetime import datetime
 from bson import ObjectId
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from .models import booksCollection
-from .serializers import BookSerializer
+from .serializers import BookSerializer, YearSerializer
 
 
 class BookViewSet(viewsets.ViewSet):
@@ -45,8 +45,6 @@ class BookViewSet(viewsets.ViewSet):
         """
         pk = ObjectId(pk)
         book = booksCollection.find_one({"_id": pk})
-        if not book:
-            return Response("Book not found.", status=404)
         serializer = BookSerializer(book)
         return Response(serializer.data)
 
@@ -80,14 +78,9 @@ class BookViewSet(viewsets.ViewSet):
         """
         Get the average price of all books.
         """
-        year = request.query_params.get("year")
-        if not year:
-            return Response({"error": "Year is required."}, status=400)
-
-        try:
-            year = int(year)
-        except ValueError:
-            return Response({"error": "Year must be a number."}, status=400)
+        year = YearSerializer(data=request.query_params)
+        year.is_valid(raise_exception=True)
+        year = year.validated_data["year"]
 
         start_date = datetime(year, 1, 1)
         end_date = datetime(year, 12, 31)

@@ -58,3 +58,11 @@ class BookSerializer(serializers.Serializer):
                     "Invalid date format. Use YYYY-MM-DD."
                 )
         return data
+
+
+class YearSerializer(serializers.Serializer):
+    """
+    This class defines the serializer for year parameter.
+    """
+
+    year = serializers.IntegerField(required=True)
