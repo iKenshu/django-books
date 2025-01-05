@@ -2,3 +2,5 @@ venv
 *.pyc
 db.sqlite3
 __pycache__
+.env
+mongo_data/
